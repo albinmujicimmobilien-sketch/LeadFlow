@@ -1,0 +1,83 @@
+// Prisma schema for LeadFlow — Immobilien-Verkaufs-Lead-Verwaltung
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum LeadSource {
+  MANUAL
+  CSV_IMPORT
+  PASTE_PARSER
+  IMMOSCOUT24_API
+  PUBLIC_REGISTER
+}
+
+enum LeadStatus {
+  NEU
+  KONTAKTIERT
+  IN_GESPRAECH
+  TERMIN
+  QUALIFIZIERT
+  GEWONNEN
+  VERLOREN
+}
+
+enum PropertyType {
+  EINFAMILIENHAUS
+  MEHRFAMILIENHAUS
+  EIGENTUMSWOHNUNG
+  GRUNDSTUECK
+  GEWERBE
+  SONSTIGES
+}
+
+model Lead {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Kontakt
+  name  String?
+  phone String?
+  email String?
+
+  // Objekt
+  address      String?
+  postalCode   String?
+  city         String?
+  propertyType PropertyType @default(SONSTIGES)
+  livingArea   Float?
+  plotArea     Float?
+  rooms        Float?
+  buildYear    Int?
+  askingPrice  Float?
+
+  // Herkunft & Einschätzung
+  source         LeadSource @default(MANUAL)
+  sourceUrl      String?
+  situation      String? // Freitext: Beschreibung / Verkaufsanlass
+  motivationTags String? // JSON-Array erkannter Signalwörter
+  score          Int        @default(0)
+  status         LeadStatus @default(NEU)
+
+  notes Note[]
+
+  @@index([status])
+  @@index([score])
+  @@index([postalCode])
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  body      String
+  leadId    String
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([leadId])
+}
