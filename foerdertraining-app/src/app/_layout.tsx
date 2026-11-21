@@ -6,6 +6,9 @@ import { useColorScheme } from 'react-native';
 import { Colors } from '@/constants/theme';
 import { AppConfig } from '@/lib/config';
 
+// Zeigt Fehler auf dem Bildschirm an statt einer leeren Seite
+export { ErrorBoundary } from 'expo-router';
+
 export default function RootLayout() {
   const scheme = useColorScheme();
   const c = Colors[scheme === 'dark' ? 'dark' : 'light'];

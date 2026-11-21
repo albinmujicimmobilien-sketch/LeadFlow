@@ -21,6 +21,8 @@ Du als Trainer schaltest Termine frei und siehst alle Buchungen mit Kontaktdaten
 
 ## Schnellstart (Demo-Modus, ohne Backend)
 
+Voraussetzung: **Node.js 22 oder 24 (LTS)**. Mit Node 20 oder älter startet die App nicht bzw. zeigt nur eine leere Seite. Prüfen mit `node -v`.
+
 ```bash
 cd foerdertraining-app
 npm install
